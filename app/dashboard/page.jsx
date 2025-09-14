@@ -5,14 +5,24 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { Orbitron } from "next/font/google";
-const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 
+const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 
 const supabase = createClient(
   "https://vtghvkppmfbjukzsutuq.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0Z2h2a3BwbWZianVrenN1dHVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4NDE0MjYsImV4cCI6MjA3MzQxNzQyNn0.pSTf8F2iYGZOBNkbxdaeayf3Js2pIXmYdtnqaY5U0Pk"
 );
 
+// ✅ map languages to their default extensions
+const EXTENSIONS = {
+  javascript: ".js",
+  python: ".py",
+  cpp: ".cpp",
+  java: ".java",
+  go: ".go",
+  rust: ".rs",
+  typescript: ".ts",
+};
 
 export default function Dashboard() {
   const router = useRouter();
@@ -62,20 +72,39 @@ export default function Dashboard() {
     router.push("/");
   };
 
+  const ensureExtension = (name, lang) => {
+    const ext = EXTENSIONS[lang] || "";
+    if (!name.endsWith(ext)) {
+      return name + ext;
+    }
+    return name;
+  };
+
   const handleAddFile = async () => {
     if (!user || !newFileName.trim()) return;
+  
+    const safeFileName = ensureExtension(newFileName.trim(), newLanguage);
+  
+    const displayName = safeFileName;
+      const internalName = newLanguage === "java" ? "Main.java" : safeFileName;
+  
     const { data, error } = await supabase
       .from("files")
       .insert([
         {
           user_id: user.id,
-          filename: newFileName,
+          filename: displayName, 
           language: newLanguage,
           file_type: newFileType,
-          content: "",
+          content:
+            newLanguage === "java"
+              ? `public class Main {\n  public static void main(String[] args) {\n    System.out.println("Hello, World!");\n  }\n}`
+              : "",
+          runnable_name: internalName,
         },
       ])
       .select();
+  
     if (!error && data) {
       setFiles([...files, ...data]);
       setNewFileName("");
@@ -100,10 +129,12 @@ export default function Dashboard() {
   return (
     <main className="flex flex-col items-center text-white bg-gradient-to-br from-[#571845] via-[#c80039] to-[#ffc300] min-h-screen">
       <header className="w-full py-6 flex flex-col items-center">
-      <h1 className={`${orbitron.className} text-6xl mb-8 drop-shadow-[0_0_15px_#ffc300]`}>
-        CENTUARI IDE
-      </h1>
-        
+        <h1
+          className={`${orbitron.className} text-6xl mb-8 drop-shadow-[0_0_15px_#ffc300]`}
+        >
+          CENTUARI IDE
+        </h1>
+
         <nav className="flex justify-between w-full max-w-6xl items-center mt-6 px-6">
           <button
             onClick={() => router.push("/")}
@@ -172,7 +203,8 @@ export default function Dashboard() {
                       Language: {file.language}
                     </p>
                     <p className="text-xs text-gray-400 mt-1">
-                      {file.file_type} • {new Date(file.created_at).toLocaleDateString()}
+                      {file.file_type} •{" "}
+                      {new Date(file.created_at).toLocaleDateString()}
                     </p>
                   </div>
                 </Link>
@@ -201,7 +233,7 @@ export default function Dashboard() {
             <h2 className="font-bold text-lg mb-4">Create a New File</h2>
             <input
               className="w-full p-2 border rounded mb-3"
-              placeholder="Filename"
+              placeholder="Filename (e.g. app)"
               value={newFileName}
               onChange={(e) => setNewFileName(e.target.value)}
             />
@@ -244,7 +276,6 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-
       {isProjectModalOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <div className="bg-white text-black rounded-xl w-96 p-6 shadow-2xl">
