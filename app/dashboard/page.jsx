@@ -100,7 +100,6 @@ export default function Dashboard() {
             newLanguage === "java"
               ? `public class Main {\n  public static void main(String[] args) {\n    System.out.println("Hello, World!");\n  }\n}`
               : "",
-          runnable_name: internalName,
         },
       ])
       .select();
