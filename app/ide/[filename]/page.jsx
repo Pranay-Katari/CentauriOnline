@@ -5,20 +5,41 @@ import { useEffect, useState, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { createClient } from "@supabase/supabase-js";
 import { Button } from "@heroui/button";
-import { executeCode } from "../../components/api";
 
+// Supabase client
 const supabase = createClient(
   "https://vtghvkppmfbjukzsutuq.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0Z2h2a3BwbWZianVrenN1dHVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4NDE0MjYsImV4cCI6MjA3MzQxNzQyNn0.pSTf8F2iYGZOBNkbxdaeayf3Js2pIXmYdtnqaY5U0Pk"
 );
 
+// Backend base URL (Render service)
+const API_BASE = "https://rendercode-rm8x.onrender.com";
+
+// Call backend /execute endpoint
+async function executeCode(language, code) {
+  const res = await fetch(`${API_BASE}/execute`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ language, code }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Backend error: ${res.statusText}`);
+  }
+
+  return res.json();
+}
+
 export default function IDEPage() {
   const { filename } = useParams();
   const router = useRouter();
   const [file, setFile] = useState(null);
-  const [output, setOutput] = useState(""); 
+  const [output, setOutput] = useState("");
   const editorRef = useRef(null);
 
+  // Load file from Supabase
   useEffect(() => {
     const loadFile = async () => {
       const user = (await supabase.auth.getUser()).data.user;
@@ -37,6 +58,7 @@ export default function IDEPage() {
     loadFile();
   }, [filename, router]);
 
+  // Save file to Supabase
   const handleSave = async () => {
     const content = editorRef.current?.getValue?.();
     await supabase
@@ -49,12 +71,13 @@ export default function IDEPage() {
     alert("Saved!");
   };
 
+  // Run code via backend
   const handleRun = async () => {
     const code = editorRef.current?.getValue?.();
     if (!code) return;
 
     try {
-      const result = await executeCode(file.language, code); 
+      const result = await executeCode(file.language, code);
       setOutput(result.run?.output || result.run?.stdout || result.run?.stderr);
     } catch (err) {
       setOutput(`Error: ${err.message}`);
