@@ -21,6 +21,7 @@
     "axios": "^1.11.0",
     "framer-motion": "^12.23.9",
     "geist": "^1.5.1",
+    "lucide-react": "^0.544.0",
     "monaco-editor": "^0.52.2",
     "monaco-editor-workers": "^0.45.0",
     "mysql": "^2.18.1",
