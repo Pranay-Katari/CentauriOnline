@@ -16,7 +16,7 @@ const supabase = createClient(
 const API_BASE = "https://rendercode-rm8x.onrender.com";
 
 // Call backend /execute endpoint
-async function executeCode(language, code) {
+async function executeCode(language, code) { 
   const res = await fetch(`${API_BASE}/execute`, {
     method: "POST",
     headers: {
@@ -38,8 +38,10 @@ export default function IDEPage() {
   const [file, setFile] = useState(null);
   const [output, setOutput] = useState("");
   const editorRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
-  // Load file from Supabase
+
+  // Load file
   useEffect(() => {
     const loadFile = async () => {
       const user = (await supabase.auth.getUser()).data.user;
@@ -58,7 +60,7 @@ export default function IDEPage() {
     loadFile();
   }, [filename, router]);
 
-  // Save file to Supabase
+  // Save file
   const handleSave = async () => {
     const content = editorRef.current?.getValue?.();
     await supabase
@@ -71,7 +73,7 @@ export default function IDEPage() {
     alert("Saved!");
   };
 
-  // Run code via backend
+  // Run code
   const handleRun = async () => {
     const code = editorRef.current?.getValue?.();
     if (!code) return;
@@ -79,8 +81,12 @@ export default function IDEPage() {
     try {
       const result = await executeCode(file.language, code);
       setOutput(result.run?.output || result.run?.stdout || result.run?.stderr);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
     } catch (err) {
       setOutput(`Error: ${err.message}`);
+    } 
+    finally {
+        setLoading(false);  
     }
   };
 
@@ -104,8 +110,8 @@ export default function IDEPage() {
           <Button onClick={handleSave} className="bg-green-600 text-white">
             Save
           </Button>
-          <Button onClick={handleRun} className="bg-blue-600 text-white">
-            Run
+          <Button onClick={handleRun} className="bg-blue-600 text-white" disabled={loading}>
+            {loading ? "Loading..." : "Run"}
           </Button>
         </div>
       </header>

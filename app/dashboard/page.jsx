@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
@@ -20,24 +20,24 @@ export default function Dashboard() {
   const [files, setFiles] = useState([]);
   const [newFileName, setNewFileName] = useState("");
   const [newLanguage, setNewLanguage] = useState("python");
+  const newID = useRef("");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) router.push("/login");
       else {
+        const loadFiles = async (userId) => {
+          const { data } = await supabase
+            .from("files")
+            .select("id, filename, language, created_at")
+            .eq("user_id", userId);
+          setFiles(data || []);
+        };
         setUser(data.user);
         loadFiles(data.user.id);
       }
     });
   }, [router]);
-
-  const loadFiles = async (userId) => {
-    const { data } = await supabase
-      .from("files")
-      .select("id, filename, language, created_at")
-      .eq("user_id", userId);
-    setFiles(data || []);
-  };
 
   const handleAddFile = async () => {
     if (!user || !newFileName.trim()) return;
@@ -59,7 +59,15 @@ export default function Dashboard() {
       setNewFileName("");
     }
   };
-
+  const handleRenameFile = async (fileId, newName) => {
+    const { error } = await 
+    supabase.from("files").update(
+      {
+        filename:newName
+      }
+    ).eq("id", fileId);
+    if (!error) setFiles((prev) => prev.filter((f) => f.id !== fileId));
+  };
   const handleDeleteFile = async (fileId) => {
     const { error } = await supabase.from("files").delete().eq("id", fileId);
     if (!error) setFiles((prev) => prev.filter((f) => f.id !== fileId));
@@ -128,7 +136,8 @@ export default function Dashboard() {
                       {new Date(file.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-3 flex justify-end gap-4">
-                      <button className="text-blue-400 hover:text-blue-300">
+                      <button 
+                        className="text-blue-400 hover:text-blue-300">
                         <FiEdit2 size={18} />
                       </button>
                       <button
