@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Centuari IDE",
   description: "Run Python, Java, C++, and more — all in the browser.",
+  icons: {
+    icon: '/icon.ico'
+  },
 };
 
 

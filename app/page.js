@@ -19,7 +19,7 @@ export default function HomePage() {
           CENTUARI IDE
         </h1>
         <header className="w-full flex justify-center">
-          <img src="/favicon.ico" alt="Centuari IDE Logo" className="w-36 h-36" />
+          <img src="/icon.ico" alt="Centuari IDE Logo" className="w-36 h-36" />
         </header>
       <section className="flex flex-col items-center text-center px-6">
         <p className="text-lg md:text-xl text-gray-200 max-w-xl leading-relaxed mb-6">
