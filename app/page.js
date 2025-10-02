@@ -56,7 +56,7 @@ export default function ApiLandingPage() {
           <Link href="/apilogin" className="hover:text-yellow-300 transition">
             API Base
           </Link>
-          <Link href="/idepage" className="hover:text-yellow-300 transition">
+          <Link href="/logine" className="hover:text-yellow-300 transition">
             IDE
           </Link>
           <Link href="#contact" className="hover:text-yellow-300 transition">
@@ -108,7 +108,7 @@ export default function ApiLandingPage() {
 
           <motion.div whileHover={{ scale: 1.05, y: -4 }}>
             <Link
-              href="/idepage"
+              href="/login"
               className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-bold text-lg hover:from-purple-400 hover:to-pink-400 transition-colors shadow-xl"
             >
               Go to IDE (v.1)
