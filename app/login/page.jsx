@@ -6,7 +6,11 @@ import { createClient } from "@supabase/supabase-js";
 import { Orbitron } from "next/font/google";
 import { Button } from "@heroui/button";
 import { FcGoogle } from "react-icons/fc";
+import dynamic from "next/dynamic";
+
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
+const Waves = dynamic(() => import("../Waves"), { ssr: false });
+
 
 const supabase = createClient(
   "https://vtghvkppmfbjukzsutuq.supabase.co",
@@ -74,101 +78,115 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="h-screen w-screen flex bg-gradient-to-bl from-[#571845] via-[#c80039] to-[#ffc300] text-white">
-      <div className="hidden md:flex flex-col items-center justify-center w-1/2 bg-black/50 backdrop-blur-md p-12">
-        <h1
-          className={`${orbitron.className} text-6xl tracking-wide drop-shadow-[0_0_25px_#ffc300]`}
-        >
-          CENTUARI IDE
-        </h1>
-        <p className="text-lg text-gray-300 max-w-md text-center">
-          A modern online IDE to create, save, and run your code seamlessly —
-          anywhere, anytime.
-        </p>
-      </div>
-
-=      <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-black/70 p-8">
-        <div className="bg-black/80 p-8 rounded-xl shadow-2xl w-full max-w-md">
-          <h2 className="text-3xl font-bold mb-6 text-center">
-            {authMode === "login" ? "Login to Your Account" : "Create an Account"}
-          </h2>
-
-          <Button
-            onPress={handleGoogleLogin}
-            variant="flat"
-            className="w-full flex items-center justify-center gap-3 bg-white text-black font-medium mb-6 hover:bg-gray-100"
-          >
-            <FcGoogle size={22} /> Continue with Google
-          </Button>
-
-          <div className="flex items-center my-4">
-            <div className="flex-grow border-t border-gray-700"></div>
-            <span className="px-3 text-sm text-gray-400">or</span>
-            <div className="flex-grow border-t border-gray-700"></div>
-          </div>
-
-          <input
-            type="email"
-            placeholder="Email"
-            value={authForm.email}
-            onChange={(e) => setAuthForm((p) => ({ ...p, email: e.target.value }))}
-            className="w-full mb-3 p-3 rounded-lg bg-black/30 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={authForm.password}
-            onChange={(e) => setAuthForm((p) => ({ ...p, password: e.target.value }))}
-            className="w-full mb-3 p-3 rounded-lg bg-black/30 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          />
-          {authMode === "signup" && (
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={authForm.confirm}
-              onChange={(e) => setAuthForm((p) => ({ ...p, confirm: e.target.value }))}
-              className="w-full mb-3 p-3 rounded-lg bg-black/30 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            />
-          )}
-
-          <Button
-            color="primary"
-            onPress={handleAuth}
-            className="w-full mb-3"
-            isDisabled={loading}
-          >
-            {loading
-              ? "Processing..."
-              : authMode === "login"
-              ? "Login"
-              : "Sign Up"}
-          </Button>
-
-          <p className="text-center text-sm text-gray-400">
-            {authMode === "login" ? (
-              <>
-                Don’t have an account?{" "}
-                <button
-                  onClick={() => setAuthMode("signup")}
-                  className="text-yellow-400 hover:underline"
-                >
-                  Sign Up
-                </button>
-              </>
-            ) : (
-              <>
-                Already have an account?{" "}
-                <button
-                  onClick={() => setAuthMode("login")}
-                  className="text-yellow-400 hover:underline"
-                >
-                  Login
-                </button>
-              </>
-            )}
+      <main className="relative h-screen w-screen flex items-center justify-center overflow-hidden text-white">
+        {/* Gradient background behind Waves */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#571845] via-[#c80039] to-[#ffc300] -z-20" />
+  
+        {/* Waves overlay for dynamic animated effect */}
+        <Waves
+          lineColor="rgba(255,255,255,0.2)"
+          backgroundColor="transparent"
+          className="absolute inset-0 -z-10"
+        />
+  
+        {/* Left branding panel */}
+        <div className="hidden lg:flex flex-col items-center justify-center w-1/2 p-12 bg-black/20 backdrop-blur-md relative z-10">
+          <h1 className={`${orbitron.className} text-6xl font-bold tracking-wide drop-shadow-[0_0_25px_#fffff]`}>
+            CENTAURI API
+          </h1>
+          <img src="/icon.ico" alt="Centauri API Logo" className="relative w-32 h-32" />
+          <p className="text-lg text-gray-100 max-w-md text-center mt-6 leading-relaxed">
+            Scalable and secure APIs to power your next startup idea.  
+            Join the future of developer-first infrastructure.
           </p>
         </div>
-      </div>
-    </main>
-  );
-}
+  
+        {/* Right login panel */}
+        <div className="flex flex-col justify-center items-center w-full lg:w-1/2 relative z-10">
+          <div className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/20">
+            <h2 className="text-3xl font-bold mb-6 text-center">
+              {authMode === "login" ? "Login to Your Account" : "Create a Startup Account"}
+            </h2>
+  
+            {/* Google Login */}
+            <Button
+    onPress={handleGoogleLogin}
+    variant="flat"
+    className="
+      w-full flex items-center justify-center gap-3
+      bg-white text-gray-800 font-medium
+      py-3 rounded-full
+      shadow-md border border-gray-200
+      hover:bg-gray-100 hover:shadow-lg
+      transition-all duration-200 ease-in-out
+      active:scale-95
+    "
+  >
+    <FcGoogle size={24} />
+    <span className="font-semibold">Sign in with Google</span>
+  </Button>
+  
+            {/* Divider */}
+            <div className="flex items-center my-4">
+              <div className="flex-grow border-t border-gray-400/40" />
+              <span className="px-3 text-sm text-gray-200">or</span>
+              <div className="flex-grow border-t border-gray-400/40" />
+            </div>
+  
+            {/* Auth Inputs */}
+            <input
+              type="email"
+              placeholder="Email"
+              value={authForm.email}
+              onChange={(e) => setAuthForm(p => ({ ...p, email: e.target.value }))}
+              className="w-full mb-3 p-3 rounded-lg bg-black/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={authForm.password}
+              onChange={(e) => setAuthForm(p => ({ ...p, password: e.target.value }))}
+              className="w-full mb-3 p-3 rounded-lg bg-black/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            />
+            {authMode === "signup" && (
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                value={authForm.confirm}
+                onChange={(e) => setAuthForm(p => ({ ...p, confirm: e.target.value }))}
+                className="w-full mb-3 p-3 rounded-lg bg-black/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              />
+            )}
+  
+            <Button
+              color="primary"
+              onPress={handleAuth}
+              className="w-full mb-3 bg-gradient-to-r from-pink-500 to-yellow-400 text-black font-semibold hover:opacity-90"
+              isDisabled={loading}
+            >
+              {loading ? "Processing..." : authMode === "login" ? "Login" : "Sign Up"}
+            </Button>
+  
+            {/* Auth Mode Toggle */}
+            <p className="text-center text-sm text-gray-200">
+              {authMode === "login" ? (
+                <>
+                  Don’t have an account?{" "}
+                  <button onClick={() => setAuthMode("signup")} className="text-yellow-300 hover:underline">
+                    Sign Up
+                  </button>
+                </>
+              ) : (
+                <>
+                  Already have an account?{" "}
+                  <button onClick={() => setAuthMode("login")} className="text-yellow-300 hover:underline">
+                    Login
+                  </button>
+                </>
+              )}
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
