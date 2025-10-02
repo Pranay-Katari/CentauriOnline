@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.centaurionline.com
+
+# Sitemaps
+Sitemap: https://www.centaurionline.com/sitemap.xml
