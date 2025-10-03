@@ -27,14 +27,18 @@ export default function ApiLandingPage() {
     <main className="relative min-h-screen w-screen flex flex-col items-center overflow-x-hidden text-zinc-100
       bg-gradient-to-bl from-[#571845] via-[#c80039] to-[#ffc300]">
       <Head>
-      <title>Centauri API – Fast, Secure & Scalable APIs</title>
-      <meta
-        name="description"
-        content="Centauri API provides blazing-fast, secure, and scalable infrastructure for modern developers. Build and launch quickly."
-      />
-      <meta name="keywords" content="API, Centauri, developer tools, scalable APIs" />
-      <meta name="robots" content="index, follow" />
-    </Head>
+        <title>Centauri API – Fast, Secure & Scalable APIs for Developers</title>
+        <meta
+          name="description"
+          content="Centauri API provides secure, startup-ready infrastructure for developers. Fast, scalable, and easy to integrate."
+        />
+        <meta name="robots" content="index, follow" />
+        <meta name="keywords" content="API, secure API, scalable API, startup API, Centauri" />
+        <meta property="og:title" content="Centauri API" />
+        <meta property="og:description" content="Fast, secure, and scalable APIs for startups and developers." />
+        <meta property="og:url" content="https://centauriapi.com" />
+        <meta property="og:type" content="website" />
+      </Head>
       {/* Animated Iridescence overlay */}
       <Iridescence className="absolute inset-0 opacity-40 mix-blend-overlay pointer-events-none" />
 

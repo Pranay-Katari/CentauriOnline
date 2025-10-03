@@ -22,7 +22,14 @@ export default function Dashboard() {
   const [newFileName, setNewFileName] = useState("");
   const [newLanguage, setNewLanguage] = useState("python");
   const newID = useRef("");
-
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut(); 
+      router.push("/");              
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) router.push("/login");
@@ -105,9 +112,16 @@ export default function Dashboard() {
           >
             <FiPlus /> Create
           </button>
+          <Button
+        onPress={handleLogout}
+        className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg shadow-md transition-all duration-200"
+      >
+        Logout
+      </Button>
         </div>
       </header>
 
+      
       <section className="bg-black/30 backdrop-blur-lg rounded-xl shadow-xl overflow-hidden border border-white/10">
         <table className="w-full text-left">
           <thead className="bg-black/50 text-xs uppercase text-gray-300">
@@ -163,6 +177,7 @@ export default function Dashboard() {
           </tbody>
         </table>
       </section>
+      
     </main>
   );
 }
