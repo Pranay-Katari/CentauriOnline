@@ -20,18 +20,20 @@ const supabase = createClient(
 export default function LoginPage() {
   const router = useRouter();
   const [authForm, setAuthForm] = useState({ email: "", password: "", confirm: "" });
-  const [authMode, setAuthMode] = useState("login"); // login | signup
+  const [authMode, setAuthMode] = useState("login"); 
   const [loading, setLoading] = useState(false);
   
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) router.push("/dashboard");
+      if (data.user) 
+        router.push("/ide_dashboard");
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        if (session?.user) router.push("/dashboard");
+        if (session?.user) 
+          router.push("/ide_dashboard");
       }
     );
 
@@ -71,7 +73,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/dashboard`, // after login
+        redirectTo: `/ide_dashboard`, 
       },
     });
     if (error) alert(error.message);
@@ -79,17 +81,14 @@ export default function LoginPage() {
 
   return (
       <main className="relative h-screen w-screen flex items-center justify-center overflow-hidden text-white">
-        {/* Gradient background behind Waves */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#571845] via-[#c80039] to-[#ffc300] -z-20" />
   
-        {/* Waves overlay for dynamic animated effect */}
         <Waves
           lineColor="rgba(255,255,255,0.2)"
           backgroundColor="transparent"
           className="absolute inset-0 -z-10"
         />
   
-        {/* Left branding panel */}
         <div className="hidden lg:flex flex-col items-center justify-center w-1/2 p-12 bg-black/20 backdrop-blur-md relative z-10">
           <h1 className={`${orbitron.className} text-6xl font-bold tracking-wide drop-shadow-[0_0_25px_#fffff]`}>
             CENTAURI API
@@ -101,14 +100,12 @@ export default function LoginPage() {
           </p>
         </div>
   
-        {/* Right login panel */}
         <div className="flex flex-col justify-center items-center w-full lg:w-1/2 relative z-10">
           <div className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/20">
             <h2 className="text-3xl font-bold mb-6 text-center">
               {authMode === "login" ? "Login to Your Account" : "Create a Startup Account"}
             </h2>
   
-            {/* Google Login */}
             <Button
     onPress={handleGoogleLogin}
     variant="flat"
@@ -126,14 +123,12 @@ export default function LoginPage() {
     <span className="font-semibold">Sign in with Google</span>
   </Button>
   
-            {/* Divider */}
             <div className="flex items-center my-4">
               <div className="flex-grow border-t border-gray-400/40" />
               <span className="px-3 text-sm text-gray-200">or</span>
               <div className="flex-grow border-t border-gray-400/40" />
             </div>
   
-            {/* Auth Inputs */}
             <input
               type="email"
               placeholder="Email"
@@ -167,7 +162,6 @@ export default function LoginPage() {
               {loading ? "Processing..." : authMode === "login" ? "Login" : "Sign Up"}
             </Button>
   
-            {/* Auth Mode Toggle */}
             <p className="text-center text-sm text-gray-200">
               {authMode === "login" ? (
                 <>

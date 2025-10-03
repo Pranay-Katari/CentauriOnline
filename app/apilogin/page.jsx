@@ -7,7 +7,6 @@ import { Button } from "@heroui/button";
 import { FcGoogle } from "react-icons/fc";
 import dynamic from "next/dynamic";
 
-// load Waves client-side only
 const Waves = dynamic(() => import("../Waves"), { ssr: false });
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
@@ -24,7 +23,6 @@ export default function ApiLoginPage() {
   const [authMode, setAuthMode] = useState("login");
   const [loading, setLoading] = useState(false);
 
-  // Check user session
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) window.location.replace(redirect);
@@ -75,17 +73,14 @@ export default function ApiLoginPage() {
 
   return (
     <main className="relative h-screen w-screen flex items-center justify-center overflow-hidden text-white">
-      {/* Gradient background behind Waves */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#571845] via-[#c80039] to-[#ffc300] -z-20" />
 
-      {/* Waves overlay for dynamic animated effect */}
       <Waves
         lineColor="rgba(255,255,255,0.2)"
         backgroundColor="transparent"
         className="absolute inset-0 -z-10"
       />
 
-      {/* Left branding panel */}
       <div className="hidden lg:flex flex-col items-center justify-center w-1/2 p-12 bg-black/20 backdrop-blur-md relative z-10">
         <h1 className={`${orbitron.className} text-6xl font-bold tracking-wide drop-shadow-[0_0_25px_#ffffff]`}>
           CENTAURI API
@@ -98,14 +93,12 @@ export default function ApiLoginPage() {
         </p>
       </div>
 
-      {/* Right login panel */}
       <div className="flex flex-col justify-center items-center w-full lg:w-1/2 relative z-10">
         <div className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/20">
           <h2 className="text-3xl font-bold mb-6 text-center">
             {authMode === "login" ? "Login to Your Account" : "Create a Startup Account"}
           </h2>
 
-          {/* Google Login */}
           <Button
   onPress={handleGoogleLogin}
   variant="flat"
@@ -123,14 +116,12 @@ export default function ApiLoginPage() {
   <span className="font-semibold">Sign in with Google</span>
 </Button>
 
-          {/* Divider */}
           <div className="flex items-center my-4">
             <div className="flex-grow border-t border-gray-400/40" />
             <span className="px-3 text-sm text-gray-200">or</span>
             <div className="flex-grow border-t border-gray-400/40" />
           </div>
 
-          {/* Auth Inputs */}
           <input
             type="email"
             placeholder="Email"
@@ -164,7 +155,6 @@ export default function ApiLoginPage() {
             {loading ? "Processing..." : authMode === "login" ? "Login" : "Sign Up"}
           </Button>
 
-          {/* Auth Mode Toggle */}
           <p className="text-center text-sm text-gray-200">
             {authMode === "login" ? (
               <>
