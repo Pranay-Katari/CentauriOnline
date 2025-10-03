@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { FiTrash2, FiEdit2, FiPlus } from "react-icons/fi";
+import { Button } from "@heroui/button";
 import { Orbitron } from "next/font/google";
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] });
 
